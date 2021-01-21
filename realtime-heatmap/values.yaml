@@ -1,0 +1,20 @@
+Image:
+  Name: kuberlab/realtimeheatmap
+  Tag: 1.0.4
+serviceType: NodePort
+
+useHDDL: false
+multiDetect: 1
+streamCount: 16
+trackHeatmap: "true"
+runtimeHeatmap: "true"
+runOnVCANode: false
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128M"
+    hddl: "8"
+  limits:
+    cpu: "8"
+    memory: "16G"

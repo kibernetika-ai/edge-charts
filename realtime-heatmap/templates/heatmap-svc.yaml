@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: trackheatmap
+  labels:
+    app: trackheatmap
+    vendor: kibernetika
+spec:
+  type: "{{ .Values.serviceType }}"
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  - port: 1935
+    targetPort: 1935
+    protocol: TCP
+    name: rtmp
+  selector:
+    app: trackheatmap
+    vendor: kibernetika

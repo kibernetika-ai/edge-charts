@@ -1,0 +1,8 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To forward RTMP port to the service, please use
+
+nodeport=$(kubectl -n {{ .Release.Namespace }} get svc trackheatmap  -o template  --template '{{ "{{" }} (index .spec.ports 1).nodePort }}')
+ssh -NL 1935:kube-master-ip:$nodeport

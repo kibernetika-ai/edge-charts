@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trackheatmap
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: trackheatmap
+      vendor: kibernetika
+  template:
+    metadata:
+      labels:
+        app: trackheatmap
+        vendor: kibernetika
+    spec:
+      {{- if .Values.runOnVCANode }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: vcac-pool
+                    operator: Exists
+      {{- end }}
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: streams
+        name: kstreams
+      containers:
+        - name:  edge
+          volumeMounts:
+          - mountPath: /data.json
+            name: kstreams
+            subPath: streams.json
+          image: "{{ printf "%s:%s" .Values.Image.Name .Values.Image.Tag }}"
+          command: ["/bin/bash", "-c"]
+          args:
+          - |
+            python /ponchik2/src/generate_streams.py $STREAM_COUNT /ponchik2/templates/data.json && /ponchik2/edge/start.sh
+          env:
+          {{- if .Values.useHDDL }}
+          - name: USE_DEVICE
+            value: "HDDL"
+          {{- end }}
+          - name: STREAM_COUNT
+            value: "{{ .Values.streamCount }}"
+          - name: TRACKHEATMAP
+            value: "{{ .Values.trackHeatmap }}"
+          - name: RUNTIME_HEATMAP
+            value: "{{ .Values.runtimeHeatmap }}"
+          - name: OUTPUT
+            value: "mjpg"
+          - name: RTMP_BACKEND
+            value: srs
+          - name: MULTIDETECT
+            value: "{{ .Values.multiDetect }}"
+          resources:
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
+              cpu: "{{ .Values.resources.limits.cpu }}"
+              {{- if .Values.useHDDL }}
+              vpu.intel.com/hddl: "{{ .Values.resources.requests.hddl }}"
+              {{- end }}
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+              {{- if .Values.useHDDL }}
+              vpu.intel.com/hddl: "{{ .Values.resources.requests.hddl }}"
+              {{- end }}
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+            name: http
+          - containerPort: 1935
+            protocol: TCP
+            name: rtmp

@@ -12,10 +12,10 @@ service:
 ingress:
   enabled: false
   annotations: {}
-    hosts:
-      - host: heatmap.local
-        paths: []
-    tls: []
+  hosts:
+  - host: heatmap.local
+    paths: []
+  tls: []
 
 resources:
   requests:

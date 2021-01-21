@@ -45,18 +45,10 @@ spec:
           - name: USE_DEVICE
             value: "HDDL"
           {{- end }}
-          - name: STREAM_COUNT
-            value: "{{ .Values.streamCount }}"
-          - name: TRACKHEATMAP
-            value: "{{ .Values.trackHeatmap }}"
-          - name: RUNTIME_HEATMAP
-            value: "{{ .Values.runtimeHeatmap }}"
-          - name: OUTPUT
-            value: "mjpg"
-          - name: RTMP_BACKEND
-            value: srs
-          - name: MULTIDETECT
-            value: "{{ .Values.multiDetect }}"
+          {{- range .Values.env }}
+          - name: {{ .name }}
+            value: {{ .value | quote }}
+          {{- end }}
           resources:
             limits:
               memory: "{{ .Values.resources.limits.memory }}"

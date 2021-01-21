@@ -6,13 +6,13 @@ metadata:
     app: trackheatmap
     vendor: kibernetika
 spec:
-  type: "{{ .Values.serviceType }}"
+  type: {{ .Values.service.type }}
   ports:
-  - port: 8000
+  - port: {{ .Values.service.http.port }}
     targetPort: 8000
     protocol: TCP
     name: http
-  - port: 1935
+  - port: {{ .Values.service.rtmp.port }}
     targetPort: 1935
     protocol: TCP
     name: rtmp

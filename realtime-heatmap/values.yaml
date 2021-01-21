@@ -1,14 +1,21 @@
 Image:
   Name: kuberlab/realtimeheatmap
   Tag: 1.0.4
-serviceType: NodePort
 
-useHDDL: false
-multiDetect: 1
-streamCount: 16
-trackHeatmap: "true"
-runtimeHeatmap: "true"
-runOnVCANode: false
+service:
+  type: NodePort
+  http:
+    port: 8000
+  rtmp:
+    port: 1935
+
+ingress:
+  enabled: false
+  annotations: {}
+    hosts:
+      - host: heatmap.local
+        paths: []
+    tls: []
 
 resources:
   requests:
@@ -18,3 +25,20 @@ resources:
   limits:
     cpu: "8"
     memory: "16G"
+
+env:
+  - name: STREAM_COUNT
+    value: "16"
+  - name: TRACKHEATMAP
+    value: "yes"
+  - name: RUNTIME_HEATMAP
+    value: "yes"
+  - name: MULTIDETECT
+    value: "1"
+  - name: OUTPUT
+    value: "mjpg"
+  - name: RTMP_BACKEND
+    value: srs
+
+useHDDL: false
+runOnVCANode: false

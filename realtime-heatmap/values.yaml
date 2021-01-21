@@ -14,7 +14,7 @@ ingress:
   annotations: {}
   hosts:
   - host: heatmap.local
-    paths: []
+    paths: ["/"]
   tls: []
 
 resources:

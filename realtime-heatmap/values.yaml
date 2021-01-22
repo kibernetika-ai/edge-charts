@@ -26,19 +26,30 @@ resources:
     cpu: "8"
     memory: "16G"
 
+# The parameters of the application is below.
+# Please do not delete any of these.
 env:
+  # The number of initial streams named as <streamN>.
   - name: STREAM_COUNT
-    value: "16"
+    value: 16
+  # The flag which means either track heatmap or not.
   - name: TRACKHEATMAP
     value: "yes"
+  # The flag which means either analyze each frame in video (without skipping) or not.
   - name: RUNTIME_HEATMAP
     value: "yes"
+  # The number of scale-crop-redetect person bodies in frames. Generally value 1 is sufficient and
+  # greater values will increase accuracy of detection of small bodies as well as the number of inference per frame.
   - name: MULTIDETECT
-    value: "1"
+    value: 1
+  # The output spec for all initial streams (can be 'hls', 'mjpg' or 'null' for now)
   - name: OUTPUT
     value: "mjpg"
+  # RTMP server to use. Only 'srs' supported for now.
   - name: RTMP_BACKEND
     value: srs
 
+# Load and run model on HDDL device (or not)
 useHDDL: false
+# Runs workload strictly on VCA card (node).
 runOnVCANode: false

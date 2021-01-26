@@ -45,6 +45,10 @@ spec:
           - name: USE_DEVICE
             value: "HDDL"
           {{- end }}
+          {{- if .Values.useIntelGPU }}
+          - name: HWACCEL
+            value: "yes"
+          {{- end }}
           {{- range .Values.env }}
           - name: {{ .name }}
             value: {{ .value | quote }}
@@ -56,11 +60,17 @@ spec:
               {{- if .Values.useHDDL }}
               vpu.intel.com/hddl: "{{ .Values.resources.requests.hddl }}"
               {{- end }}
+              {{- if .Values.useIntelGPU }}
+              gpu.intel.com/i915: "1"
+              {{- end }}
             requests:
               memory: "{{ .Values.resources.requests.memory }}"
               cpu: "{{ .Values.resources.requests.cpu }}"
               {{- if .Values.useHDDL }}
               vpu.intel.com/hddl: "{{ .Values.resources.requests.hddl }}"
+              {{- end }}
+              {{- if .Values.useIntelGPU }}
+              gpu.intel.com/i915: "1"
               {{- end }}
           ports:
           - containerPort: 8000

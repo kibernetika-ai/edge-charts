@@ -64,6 +64,8 @@ env:
   - name: KWORKSPACE
     value: srvws
 
+openness:
+  enabled: false
 # Load and run model on HDDL device (or not)
 useHDDL: false
 # Use Intel GPU for decoding or not

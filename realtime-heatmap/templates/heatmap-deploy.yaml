@@ -29,12 +29,56 @@ spec:
           defaultMode: 420
           name: streams
         name: kstreams
+      {{- if .Values.openness.enabled }}
+      - name: certs
+        emptyDir: {}
+      - name: ca-certrequester
+        secret:
+          secretName: ca-certrequester
+      serviceAccountName: heatmap-producer
+      initContainers:
+      - name: alpine
+        image: alpine:3.12.0
+        command: [ "/bin/sh" ]
+        args: [ "-c", "cp /root/ca-certrequester/cert.pem /root/certs/root.pem" ]
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "0.1"
+          limits:
+            cpu: "0.1"
+            memory: "128Mi"
+        volumeMounts:
+          - name: ca-certrequester
+            mountPath: /root/ca-certrequester
+          - name: certs
+            mountPath: /root/certs
+      - name: certrequester
+        image: certrequester:1.0
+        args: [ "--cfg", "/home/certrequester/config/certrequest.json" ]
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "0.1"
+          limits:
+            cpu: "0.1"
+            memory: "128Mi"
+        volumeMounts:
+          - name: config
+            mountPath: /home/certrequester/config/
+          - name: certs
+            mountPath: /home/certrequester/certs/
+      {{- end }}
       containers:
         - name:  edge
           volumeMounts:
           - mountPath: /data.json
             name: kstreams
             subPath: streams.json
+          {{- if .Values.openness.enabled }}
+          - name: certs
+            mountPath: /root/certs/
+          {{- end }}
           image: "{{ printf "%s:%s" .Values.Image.Name .Values.Image.Tag }}"
           imagePullPolicy: Always
           command: ["/bin/bash", "-c"]
@@ -46,6 +90,9 @@ spec:
           - name: USE_DEVICE
             value: "HDDL"
           {{- end }}
+          {{- if .Values.openness.enabled }}
+          - name: OPENNESS_ENABLED
+            value: "true"
           {{- if .Values.useIntelGPU }}
           - name: HWACCEL
             value: "yes"

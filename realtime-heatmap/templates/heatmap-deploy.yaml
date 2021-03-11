@@ -93,6 +93,7 @@ spec:
           {{- if .Values.openness.enabled }}
           - name: OPENNESS_ENABLED
             value: "true"
+          {{- end }}
           {{- if .Values.useIntelGPU }}
           - name: HWACCEL
             value: "yes"

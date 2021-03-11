@@ -35,6 +35,9 @@ spec:
       - name: ca-certrequester
         secret:
           secretName: ca-certrequester
+      - name: config
+        configMap:
+          name: heatmap-producer-csr-config
       serviceAccountName: heatmap-producer
       initContainers:
       - name: alpine

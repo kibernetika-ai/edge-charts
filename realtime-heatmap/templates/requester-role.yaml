@@ -18,6 +18,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: heatmap-producer
+    namespace: {{ .Release.Namespace }}
 
 ---
 apiVersion: v1

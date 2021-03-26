@@ -14,7 +14,7 @@ spec:
         component: audience-api
     spec:
       {{- if .Values.openness.enabled }}
-      serviceAccountName: heatmap-producer
+      serviceAccountName: heatmap-consumer
       initContainers:
       - name: certrequester
         image: certrequester:1.0

@@ -3,13 +3,13 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: heatmap-{{ .Values.openness.heatmapId }}
+  name: heatmap-consumer
 
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: heatmap-{{ .Values.openness.heatmapId }}-csr-requester
+  name: heatmap-consumer-csr-requester
   namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -17,21 +17,21 @@ roleRef:
   name: csr-requester
 subjects:
   - kind: ServiceAccount
-    name: heatmap-{{ .Values.openness.heatmapId }}
+    name: heatmap-consumer
     namespace: {{ .Release.Namespace }}
 
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: heatmap-{{ .Values.openness.heatmapId }}-csr-config
+  name: heatmap-consumer-csr-config
 data:
   certrequest.json: |
     {
         "CSR": {
-            "Name": "heatmap-{{ .Values.openness.heatmapId }}",
+            "Name": "heatmap-consumer",
             "Subject": {
-                "CommonName": "heatmap:{{ .Values.openness.heatmapId }}",
+                "CommonName": "heatmap:consumer",
                 "Organization": ["Kibernetika Inc."]
             },
             "DNSSANs": [],

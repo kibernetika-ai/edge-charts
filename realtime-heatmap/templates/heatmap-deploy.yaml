@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: trackheatmap
+  name: heatmap-{{ .Values.openness.heatmapId }}
 spec:
   replicas: 1
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: trackheatmap
+      app: {{ .Values.openness.heatmapId }}
       vendor: kibernetika
   template:
     metadata:
       labels:
-        app: trackheatmap
+        app: {{ .Values.openness.heatmapId }}
         vendor: kibernetika
     spec:
       {{- if .Values.runOnVCANode }}
@@ -37,8 +37,8 @@ spec:
           secretName: ca-certrequester
       - name: config
         configMap:
-          name: heatmap-producer-csr-config
-      serviceAccountName: heatmap-producer
+          name: heatmap-{{ .Values.openness.heatmapId }}-csr-config
+      serviceAccountName: heatmap-{{ .Values.openness.heatmapId }}
       initContainers:
       - name: certrequester
         image: certrequester:1.0

@@ -65,7 +65,8 @@ env:
     value: srvws
 
 openness:
-  enabled: false
+  enabled: true
+  heatmapId: 'runtime-heatmap'
 # Load and run model on HDDL device (or not)
 useHDDL: false
 # Use Intel GPU for decoding or not

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: trackheatmap
+  name: heatmap-{{ .Values.openness.heatmapId }}
   labels:
-    app: trackheatmap
+    app: {{ .Values.openness.heatmapId }}
     vendor: kibernetika
 spec:
   type: {{ .Values.service.type }}
@@ -17,5 +17,5 @@ spec:
     protocol: TCP
     name: rtmp
   selector:
-    app: trackheatmap
+    app: {{ .Values.openness.heatmapId }}
     vendor: kibernetika

@@ -8,9 +8,9 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: trackheatmap
+  name: {{ .Values.openness.heatmapId }}
   labels:
-    app: trackheatmap
+    app: {{ .Values.openness.heatmapId }}
     vendor: kibernetika
   {{- with .Values.ingress.annotations }}
   annotations:
@@ -35,7 +35,7 @@ spec:
         {{- range .paths }}
           - path: {{ . }}
             backend:
-              serviceName: trackheatmap
+              serviceName: heatmap-{{ .Values.openness.heatmapId }}
               servicePort: {{ $httpPort }}
         {{- end }}
   {{- end }}

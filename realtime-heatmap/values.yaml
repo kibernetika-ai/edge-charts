@@ -34,7 +34,7 @@ env:
     value: 16
   # The flag which means either track heatmap or not.
   - name: TRACKHEATMAP
-    value: "yes"
+    value: "no"
   # The flag which means either analyze each frame in video (without skipping) or not.
   - name: RUNTIME_HEATMAP
     value: "yes"

@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2021 Kibernetika, Inc. All rights reserved.
+{{- if .Values.openness.enabled }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: detector-app-{{ .Values.openness.detectorId }}
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: heatmap-{{ .Values.openness.detectorId }}-csr-requester
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: csr-requester
+subjects:
+  - kind: ServiceAccount
+    name: detector-app-{{ .Values.openness.detectorId }}
+    namespace: {{ .Release.Namespace }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: detector-app-{{ .Values.openness.detectorId }}-csr-config
+data:
+  certrequest.json: |
+    {
+        "CSR": {
+            "Name": "detector-app-{{ .Values.openness.detectorId }}",
+            "Subject": {
+                "CommonName": "detector-app:{{ .Values.openness.detectorId }}",
+                "Organization": ["Kibernetika Inc."]
+            },
+            "DNSSANs": [],
+            "IPSANs": [],
+            "KeyUsages": [
+                "digital signature", "key encipherment", "client auth"
+            ]
+        },
+        "Signer": "openness.org/certsigner",
+        "WaitTimeout": "5m"
+    }
+{{- end }}

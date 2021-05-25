@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2021 Kibernetika, Inc. All rights reserved.
+apiVersion: v1
+kind: Service
+metadata:
+  name: detector-app-{{ .Values.openness.detectorId }}
+  labels:
+    app: {{ .Values.openness.detectorId }}
+    vendor: kibernetika
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.http.port }}
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  - port: {{ .Values.service.rtmp.port }}
+    targetPort: 1935
+    protocol: TCP
+    name: rtmp
+  selector:
+    app: {{ .Values.openness.detectorId }}
+    vendor: kibernetika
